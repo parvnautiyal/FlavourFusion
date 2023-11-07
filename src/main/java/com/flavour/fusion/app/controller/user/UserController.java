@@ -21,22 +21,22 @@ public class UserController {
 
     @GetMapping("/details")
     @PreAuthorize("hasRole('USER')")
-    public Mono<ResponseEntity<ResponsePayload>> retrieveUserDetails(ServerHttpRequest request, @RequestParam("username") String username) {
-        return protectedUserService.retrieveUserDetails(request.getURI().getPath(), username)
-                .map(ResponseEntity::ok);
+    public Mono<ResponseEntity<ResponsePayload>> retrieveUserDetails(ServerHttpRequest request,
+            @RequestParam("username") String username) {
+        return protectedUserService.retrieveUserDetails(request.getURI().getPath(), username).map(ResponseEntity::ok);
     }
 
     @PatchMapping("/update")
     @PreAuthorize("hasRole('USER')")
-    public Mono<ResponseEntity<ResponsePayload>> updateUser(ServerHttpRequest request, @RequestBody Map<String, Object> payload, @RequestParam("username") String username) {
-        return protectedUserService.updateUser(request.getURI().getPath(), username, payload)
-                .map(ResponseEntity::ok);
+    public Mono<ResponseEntity<ResponsePayload>> updateUser(ServerHttpRequest request,
+            @RequestBody Map<String, Object> payload, @RequestParam("username") String username) {
+        return protectedUserService.updateUser(request.getURI().getPath(), username, payload).map(ResponseEntity::ok);
     }
 
     @DeleteMapping("/delete")
     @PreAuthorize("hasRole('USER')")
-    public Mono<ResponseEntity<ResponsePayload>> deleteUser(ServerHttpRequest request, @RequestParam("username") String username) {
-        return protectedUserService.deleteUser(request.getURI().getPath(), username)
-                .map(ResponseEntity::ok);
+    public Mono<ResponseEntity<ResponsePayload>> deleteUser(ServerHttpRequest request,
+            @RequestParam("username") String username) {
+        return protectedUserService.deleteUser(request.getURI().getPath(), username).map(ResponseEntity::ok);
     }
 }

@@ -26,63 +26,55 @@ public class ProtectedUserServiceImpl implements ProtectedUserService {
 
     @Override
     public Mono<ResponsePayload> retrieveUserDetails(String uri, String username) {
-        return userRepository.findByUsername(username)
-                .map(user -> {
-                    ResponsePayload responsePayload = new ResponsePayload(uri, HttpStatus.OK);
-                    responsePayload.put("response", user);
-                    return responsePayload;
-                });
+        return userRepository.findByUsername(username).map(user -> {
+            ResponsePayload responsePayload = new ResponsePayload(uri, HttpStatus.OK);
+            responsePayload.put("response", user);
+            return responsePayload;
+        });
     }
 
     @Override
     public Mono<ResponsePayload> updateUser(String uri, String username, Map<String, Object> updatedUser) {
-        return userRepository.findByUsername(username)
-                .flatMap(user -> {
-                    Address updatedAddress = objectMapper.convertValue(updatedUser.get("updatedAddress"), Address.class);
-                    user.setAddress(updatedAddress);
-                    user.setPhoneNumber(((String) updatedUser.get("updatedPhoneNumber")));
-                    return userRepository.save(user)
-                            .map(patchUser -> {
-                                ResponsePayload responsePayload = new ResponsePayload(uri, HttpStatus.OK);
-                                responsePayload.put("response", patchUser);
-                                return responsePayload;
-                            });
-                });
+        return userRepository.findByUsername(username).flatMap(user -> {
+            Address updatedAddress = objectMapper.convertValue(updatedUser.get("updatedAddress"), Address.class);
+            user.setAddress(updatedAddress);
+            user.setPhoneNumber(((String) updatedUser.get("updatedPhoneNumber")));
+            return userRepository.save(user).map(patchUser -> {
+                ResponsePayload responsePayload = new ResponsePayload(uri, HttpStatus.OK);
+                responsePayload.put("response", patchUser);
+                return responsePayload;
+            });
+        });
     }
 
     @Override
     public Mono<ResponsePayload> deleteUser(String uri, String username) {
-        return userRepository.deleteByUsername(username)
-                .then(Mono.fromCallable(() -> {
-                    ResponsePayload responsePayload = new ResponsePayload(uri, HttpStatus.OK);
-                    responsePayload.put("message", "User with username" + username + " deleted");
-                    return responsePayload;
-                }));
+        return userRepository.deleteByUsername(username).then(Mono.fromCallable(() -> {
+            ResponsePayload responsePayload = new ResponsePayload(uri, HttpStatus.OK);
+            responsePayload.put("message", "User with username" + username + " deleted");
+            return responsePayload;
+        }));
     }
 
     @Override
     public Mono<ResponsePayload> changeUserStatus(String uri, String username) {
-        return userRepository.findByUsername(username)
-                .flatMap(user -> {
-                    user.setEnabled(!user.isEnabled());
-                    return userRepository.save(user);
-                })
-                .map(updateUser -> {
-                    ResponsePayload responsePayload = new ResponsePayload(uri, HttpStatus.OK);
-                    String message = updateUser.isEnabled() ? "User enabled" : "User disabled";
-                    responsePayload.put("message", message);
-                    return responsePayload;
-                });
+        return userRepository.findByUsername(username).flatMap(user -> {
+            user.setEnabled(!user.isEnabled());
+            return userRepository.save(user);
+        }).map(updateUser -> {
+            ResponsePayload responsePayload = new ResponsePayload(uri, HttpStatus.OK);
+            String message = updateUser.isEnabled() ? "User enabled" : "User disabled";
+            responsePayload.put("message", message);
+            return responsePayload;
+        });
     }
 
     @Override
     public Mono<ResponsePayload> getAllUsers(String uri, int pageNumber, int pageSize) {
-        return userRepository.findAllUsers(PageRequest.of(pageNumber, pageSize))
-                .collectList()
-                .map(users -> {
-                    ResponsePayload responsePayload = new ResponsePayload(uri, HttpStatus.OK);
-                    responsePayload.put("response", Collections.singletonMap("users", users));
-                    return responsePayload;
-                });
+        return userRepository.findAllUsers(PageRequest.of(pageNumber, pageSize)).collectList().map(users -> {
+            ResponsePayload responsePayload = new ResponsePayload(uri, HttpStatus.OK);
+            responsePayload.put("response", Collections.singletonMap("users", users));
+            return responsePayload;
+        });
     }
 }

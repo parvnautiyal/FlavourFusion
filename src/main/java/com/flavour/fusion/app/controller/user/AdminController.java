@@ -19,22 +19,24 @@ public class AdminController {
 
     @GetMapping("/details")
     @PreAuthorize("hasRole('ADMIN')")
-    public Mono<ResponseEntity<ResponsePayload>> retrieveAdminDetails(ServerHttpRequest request, @RequestParam("username") String username) {
-        return protectedUserService.retrieveUserDetails(request.getURI().getPath(), username)
-                .map(ResponseEntity::ok);
+    public Mono<ResponseEntity<ResponsePayload>> retrieveAdminDetails(ServerHttpRequest request,
+            @RequestParam("username") String username) {
+        return protectedUserService.retrieveUserDetails(request.getURI().getPath(), username).map(ResponseEntity::ok);
     }
 
     @PostMapping("/change-status")
     @PreAuthorize("hasRole('ADMIN')")
-    public Mono<ResponseEntity<ResponsePayload>> changeUserStatus(ServerHttpRequest request, @RequestParam("username") String username) {
-        return protectedUserService.changeUserStatus(request.getURI().getPath(), username)
-                .map(ResponseEntity::ok);
+    public Mono<ResponseEntity<ResponsePayload>> changeUserStatus(ServerHttpRequest request,
+            @RequestParam("username") String username) {
+        return protectedUserService.changeUserStatus(request.getURI().getPath(), username).map(ResponseEntity::ok);
     }
 
     @GetMapping("/all-users/{pageNumber}/{pageSize}")
     @PreAuthorize("hasRole('ADMIN')")
-    public Mono<ResponseEntity<ResponsePayload>> getAllUsers(ServerHttpRequest request, @PathVariable("pageNumber") String pageNumber, @PathVariable("pageSize") String pageSize) {
-        return protectedUserService.getAllUsers(request.getURI().getPath(), Integer.parseInt(pageNumber)-1, Integer.parseInt(pageSize))
+    public Mono<ResponseEntity<ResponsePayload>> getAllUsers(ServerHttpRequest request,
+            @PathVariable("pageNumber") String pageNumber, @PathVariable("pageSize") String pageSize) {
+        return protectedUserService
+                .getAllUsers(request.getURI().getPath(), Integer.parseInt(pageNumber) - 1, Integer.parseInt(pageSize))
                 .map(ResponseEntity::ok);
     }
 

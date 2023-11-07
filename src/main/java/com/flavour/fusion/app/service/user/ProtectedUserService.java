@@ -15,5 +15,6 @@ public interface ProtectedUserService {
     Mono<ResponsePayload> deleteUser(String uri, String username);
 
     Mono<ResponsePayload> changeUserStatus(String uri, String username);
+
     Mono<ResponsePayload> getAllUsers(String uri, int pageNumber, int pageSize);
 }
