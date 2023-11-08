@@ -2,6 +2,7 @@ package com.flavour.fusion.app.model.user;
 
 import lombok.*;
 
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -15,7 +16,6 @@ public class UserDto {
     private String email;
     private String password;
     private String dateOfBirth;
-    private Address address;
-    private String phoneNumber;
+    private List<Address> address;
     private Set<Role> roles;
 }

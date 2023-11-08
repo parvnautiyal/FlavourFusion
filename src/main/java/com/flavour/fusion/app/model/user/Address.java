@@ -8,6 +8,8 @@ import lombok.*;
 @NoArgsConstructor
 @ToString
 public class Address {
+    private AddressCategory category;
+    private String nickname;
     private String addressLine1;
     private String addressLine2;
     private String addressLine3;
@@ -16,4 +18,5 @@ public class Address {
     private String city;
     private String state;
     private String country;
+    private String phoneNumber;
 }

@@ -1,6 +1,7 @@
 package com.flavour.fusion.app.controller.user;
 
 import com.flavour.fusion.app.model.envelope.ResponsePayload;
+import com.flavour.fusion.app.model.user.Address;
 import com.flavour.fusion.app.service.user.ProtectedUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,8 +10,6 @@ import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
-
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1.0/flavour-fusion/user")
@@ -26,11 +25,19 @@ public class UserController {
         return protectedUserService.retrieveUserDetails(request.getURI().getPath(), username).map(ResponseEntity::ok);
     }
 
-    @PatchMapping("/update")
+    @PatchMapping("/update-address")
     @PreAuthorize("hasRole('USER')")
-    public Mono<ResponseEntity<ResponsePayload>> updateUser(ServerHttpRequest request,
-            @RequestBody Map<String, Object> payload, @RequestParam("username") String username) {
-        return protectedUserService.updateUser(request.getURI().getPath(), username, payload).map(ResponseEntity::ok);
+    public Mono<ResponseEntity<ResponsePayload>> updateAddress(ServerHttpRequest request, @RequestBody Address address,
+            @RequestParam("username") String username) {
+        return protectedUserService.updateAddress(request.getURI().getPath(), username, address)
+                .map(ResponseEntity::ok);
+    }
+
+    @PutMapping("/add-address")
+    @PreAuthorize("hasRole('USER')")
+    public Mono<ResponseEntity<ResponsePayload>> addAddress(ServerHttpRequest request, @RequestBody Address address,
+            @RequestParam("username") String username) {
+        return protectedUserService.addAddress(request.getURI().getPath(), username, address).map(ResponseEntity::ok);
     }
 
     @DeleteMapping("/delete")

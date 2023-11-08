@@ -2,6 +2,8 @@ package com.flavour.fusion.app.service.user.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.flavour.fusion.app.model.envelope.ResponsePayload;
+import com.flavour.fusion.app.model.user.Address;
+import com.flavour.fusion.app.model.user.AddressCategory;
 import com.flavour.fusion.app.model.user.User;
 import com.flavour.fusion.app.model.user.UserDto;
 import com.flavour.fusion.app.repository.UserRepository;
@@ -12,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
+
+import java.util.Collections;
 
 @Component
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
@@ -24,6 +28,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public Mono<ResponsePayload> createUser(UserDto userDto, String uri) {
         userDto.setPassword(encoder.encode(userDto.getPassword()));
+        Address address = userDto.getAddress().get(0);
+        address.setCategory(AddressCategory.ADDRESS_HOME);
+        userDto.setAddress(Collections.singletonList(address));
         return userRepository.save(objectMapper.convertValue(userDto, User.class)).map(user -> {
             ResponsePayload responsePayload = new ResponsePayload(uri, HttpStatus.CREATED);
             responsePayload.put("response", user);
